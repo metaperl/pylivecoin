@@ -54,25 +54,23 @@ class Livecoin(object):
         request_url = ''
 
         if method in self.public_set:
-            print "request_url = ({0} % 'exchange') + {1} + '?'".format(
-                base_url, method)
             request_url = base_url + 'exchange/' + method
             if options:
                 request_url += '?' + urllib.urlencode(options)
+            print "request_url = {0}".format(request_url)
         elif method in self.market_set:
             request_url = (base_url % 'market') + method + '?apikey=' + self.api_key + "&nonce=" + nonce + '&'
         elif method in self.account_set:
             request_url = (base_url % 'account') + method + '?apikey=' + self.api_key + "&nonce=" + nonce + '&'
-
 
         signature = hmac.new(self.api_secret.encode(), request_url.encode(), hashlib.sha512).hexdigest()
 
         headers = {"apisign": signature}
 
         ret = requests.get(request_url, headers=headers)
-        # print "Result of {0} ({1}) = {2}".format(
-        #     method, ret, pprint.pformat(ret.json()))
-        #logger.info("Result of {0}={1}".format(method, ret))
+        print "Result of {0} via {1} = {2}".format(
+            method, request_url, pprint.pformat(ret.json()))
+        # logger.info("Result of {0}={1}".format(method, ret))
         return ret.json()
 
     def get_markets(self):
@@ -107,14 +105,22 @@ class Livecoin(object):
         """
         return self.api_query('getticker', {'market': market})
 
-    def get_market_summaries(self):
+    def get_last_trades(self, market, in_minutes='false', type='false'):
         """
-        Used to get the last 24 hour summary of all active exchanges
+        Retrieve information on the latest transactions for a currency pair.
+
+        :param str market: Which currency pair. E.g. LTC/BTC
+        :param bool in_minutes: if false (the default), then supply in hours.
+        :param str type: defaults to false. But can be BUY or SELL.
 
         :return: Summaries of active exchanges in JSON
-        :rtype : dict
+        :rtype : list of dict
         """
-        return self.api_query('getmarketsummaries')
+        return self.api_query('last_trades', {
+            'currencyPair': market,
+            'minutesOrHour': in_minutes,
+            'type': type
+        })
 
     def get_orderbook(self, market, group_by_price=False, depth=20):
         """

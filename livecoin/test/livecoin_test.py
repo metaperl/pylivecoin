@@ -5,7 +5,7 @@ from livecoin.livecoin import Livecoin
 
 
 def test_basic_response(unit_test, result, method_name):
-    print "Method={0}, result={1}".format(method_name, result)
+
     unit_test.assertTrue(result is not None, "result not present in response")
 
 
@@ -20,6 +20,8 @@ class TestBittrexPublicAPI(unittest.TestCase):
     Integration tests for the Bittrex public API.
     These will fail in the absence of an internet connection or if bittrex API goes down
     """
+    market = 'ADZ/BTC'
+
     def setUp(self):
         self.livecoin = Livecoin(None, None)
 
@@ -36,11 +38,13 @@ class TestBittrexPublicAPI(unittest.TestCase):
         self.livecoin = Livecoin(None, "123")
         self.assertTrue(actual['success'], "failed with None key")
 
-    def test_get_markets(self):
-        actual = self.livecoin.get_markets()
-        test_basic_response(self, actual, "get_markets")
-        self.assertTrue(isinstance(actual['result'], list), "result is not a list")
-        self.assertTrue(len(actual['result']) > 0, "result list is 0-length")
+    def test_get_last_trades(self):
+        actual = self.livecoin.get_last_trades(self.market)
+        test_basic_response(self, actual, "get_last_trades")
+        self.assertTrue(
+            isinstance(actual, list), "result is not a list")
+        self.assertTrue(
+            len(actual) > 0, "result list is 0-length")
 
     def test_get_all_orderbooks(self):
         actual = self.livecoin.get_all_orderbooks()
@@ -49,7 +53,7 @@ class TestBittrexPublicAPI(unittest.TestCase):
             isinstance(actual, dict), "result is not a dict")
 
     def test_get_orderbook(self):
-        actual = self.livecoin.get_orderbook('LTC/BTC')
+        actual = self.livecoin.get_orderbook(self.market)
         test_basic_response(self, actual, "get_orderbook")
         self.assertTrue(
             isinstance(actual, dict), "result is not a dict")
