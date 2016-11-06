@@ -103,7 +103,21 @@ class Livecoin(object):
         :return: Current values for given market in JSON
         :rtype : dict
         """
+        return self.api_query('ticker', {
+            'currencyPair': market
+            }
+        )
+
         return self.api_query('getticker', {'market': market})
+
+    def get_market_summaries(self):
+        """
+        Summarize all markets.
+
+        :return: Current values for all markets in JSON
+        :rtype : list of dict
+        """
+        return self.api_query('ticker')
 
     def get_last_trades(self, market, in_minutes='false', type='false'):
         """

@@ -38,6 +38,20 @@ class TestBittrexPublicAPI(unittest.TestCase):
         self.livecoin = Livecoin(None, "123")
         self.assertTrue(actual['success'], "failed with None key")
 
+    def test_get_ticker(self):
+        actual = self.livecoin.get_ticker(self.market)
+        test_basic_response(self, actual, "get_ticker")
+        self.assertTrue(
+            isinstance(actual, dict), "result is not a dict")
+
+    def test_get_market_summaries(self):
+        actual = self.livecoin.get_market_summaries()
+        test_basic_response(self, actual, "get_market_summaries")
+        self.assertTrue(
+            isinstance(actual, list), "result is not a list")
+        self.assertTrue(
+            len(actual) > 0, "result list is 0-length")
+
     def test_get_last_trades(self):
         actual = self.livecoin.get_last_trades(self.market)
         test_basic_response(self, actual, "get_last_trades")
