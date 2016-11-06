@@ -116,24 +116,27 @@ class Livecoin(object):
         """
         return self.api_query('getmarketsummaries')
 
-    def get_orderbook(self, market, depth_type, depth=20):
+    def get_orderbook(self, market, group_by_price=False, depth=20):
         """
         Used to get retrieve the orderbook for a given market
 
-        :param market: String literal for the market (ex: BTC-LTC)
+        :param market: String literal for the market (ex: LTC/BTC)
         :type market: str
 
-        :param depth_type: buy, sell or both to identify the type of orderbook to return.
-            Use constants BUY_ORDERBOOK, SELL_ORDERBOOK, BOTH_ORDERBOOK
-        :type depth_type: str
+        :param group_by_price: group by price.
+        :type depth_type: bool
 
-        :param depth: how deep of an order book to retrieve. Max is 100, default is 20
+        :param depth: how deep of an order book to retrieve.
         :type depth: int
 
+
         :return: Orderbook of market in JSON
-        :rtype : list of dict
+        :rtype : dict
         """
-        return self.api_query('getorderbook', {'market': market, 'type': depth_type, 'depth': depth})
+        return self.api_query('order_book', {
+            'currencyPair': market,
+            'groupByPrice': group_by_price,
+            'depth': depth})
 
     def get_all_orderbooks(self, group_by_price=False, depth=1):
         """
@@ -145,7 +148,7 @@ class Livecoin(object):
         :return: Orderbook of market in JSON
         :rtype : list of dict
         """
-        options =  {
+        options = {
             'groupByPrice': group_by_price,
             'depth': depth
         }

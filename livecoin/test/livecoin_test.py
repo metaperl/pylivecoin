@@ -48,6 +48,12 @@ class TestBittrexPublicAPI(unittest.TestCase):
         self.assertTrue(
             isinstance(actual, dict), "result is not a dict")
 
+    def test_get_orderbook(self):
+        actual = self.livecoin.get_orderbook('LTC/BTC')
+        test_basic_response(self, actual, "get_orderbook")
+        self.assertTrue(
+            isinstance(actual, dict), "result is not a dict")
+
     def test_get_currencies(self):
         actual = self.livecoin.get_currencies()
         test_basic_response(self, actual, "get_currencies")
