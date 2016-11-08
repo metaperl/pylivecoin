@@ -110,7 +110,7 @@ class Livecoin(object):
 
         return self.api_query('getticker', {'market': market})
 
-    def get_market_summaries(self):
+    def get_all_tickers(self):
         """
         Summarize all markets.
 
@@ -176,23 +176,22 @@ class Livecoin(object):
             'all/order_book', options
         )
 
-    def get_market_history(self, market, count):
+    def get_maxbid_minask(self, market=None):
         """
-        Used to retrieve the latest trades that have occured for a
-        specific market.
+        Returns maximum bid and minimum ask optionally
+        in a specific orderbook.
 
-        /market/getmarkethistory
-
-        :param market: String literal for the market (ex: BTC-LTC)
+        :param market: String literal for the market (ex: LTC/BTC)
         :type market: str
-
-        :param count: Number between 1-100 for the number of entries to return (default = 20)
-        :type count: int
 
         :return: Market history in JSON
         :rtype : dict
         """
-        return self.api_query('getmarkethistory', {'market': market, 'count': count})
+        if market:
+            options = dict(currencyPair=market)
+            return self.api_query('maxbid_minask', options)
+
+        return self.api_query('maxbid_minask')
 
     def buy_market(self, market, quantity):
         """

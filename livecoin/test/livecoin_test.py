@@ -44,9 +44,9 @@ class TestBittrexPublicAPI(unittest.TestCase):
         self.assertTrue(
             isinstance(actual, dict), "result is not a dict")
 
-    def test_get_market_summaries(self):
-        actual = self.livecoin.get_market_summaries()
-        test_basic_response(self, actual, "get_market_summaries")
+    def test_get_all_tickers(self):
+        actual = self.livecoin.get_all_tickers()
+        test_basic_response(self, actual, "get_all_tickers")
         self.assertTrue(
             isinstance(actual, list), "result is not a list")
         self.assertTrue(
@@ -60,22 +60,25 @@ class TestBittrexPublicAPI(unittest.TestCase):
         self.assertTrue(
             len(actual) > 0, "result list is 0-length")
 
-    def test_get_all_orderbooks(self):
-        actual = self.livecoin.get_all_orderbooks()
-        test_basic_response(self, actual, "get_all_orderbooks")
-        self.assertTrue(
-            isinstance(actual, dict), "result is not a dict")
-
     def test_get_orderbook(self):
         actual = self.livecoin.get_orderbook(self.market)
         test_basic_response(self, actual, "get_orderbook")
         self.assertTrue(
             isinstance(actual, dict), "result is not a dict")
 
-    def test_get_currencies(self):
-        actual = self.livecoin.get_currencies()
-        test_basic_response(self, actual, "get_currencies")
-        pass
+    def test_get_all_orderbooks(self):
+        actual = self.livecoin.get_all_orderbooks()
+        test_basic_response(self, actual, "get_all_orderbooks")
+        self.assertTrue(
+            isinstance(actual, dict), "result is not a dict")
+
+    def test_get_maxbid_minask(self):
+        actual = self.livecoin.get_maxbid_minask()
+        test_basic_response(self, actual, "get_maxbid_minask")
+
+        actual = self.livecoin.get_maxbid_minask(market=self.market)
+        test_basic_response(self, actual, "get_maxbid_minask")
+
 
 
 class TestLivecoinAccountAPI(unittest.TestCase):
